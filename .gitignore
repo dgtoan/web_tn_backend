@@ -1,1 +1,12 @@
+<<<<<<< HEAD
 /node_modules
+=======
+node_modules
+build
+npm-debug.log
+.env
+.DS_Store
+
+# data folder
+data
+>>>>>>> 7f2ae0141650cc9e559035251a08ed7db1c1bc65
