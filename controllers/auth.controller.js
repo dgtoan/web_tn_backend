@@ -27,7 +27,7 @@ const authController = {
         res.send({ access_token, refresh_token });
     },
 
-    registry: async (req, res) => {
+    register: async (req, res) => {
 
         const { db, client } = await connectDb();
         const usersCollection = db.collection(constants.USERS);

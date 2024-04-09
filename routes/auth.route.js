@@ -5,7 +5,7 @@ const jwtMiddleware = require("../middleware/jwt.middleware");
 
 authRouter.post("/login", authController.login);
 
-authRouter.post("/registry", authController.registry);
+authRouter.post("/register", authController.register);
 
 authRouter.get("/refresh_token", authController.refreshToken);
 
