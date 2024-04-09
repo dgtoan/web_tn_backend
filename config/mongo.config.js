@@ -3,7 +3,7 @@ const MongoClient = require("mongodb").MongoClient;
 // const URL = `mongodb+srv://alexcao194:admin@trapper.jqj4ffe.mongodb.net/?retryWrites=true&w=majority`;
 
 // TODO: paste a mongo URL here
-const URL = "";
+const URL = "mongodb+srv://alexcao194:oAWLfcIvFHZYfxfK@cluster0.6ra50nr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const DB_NAME = "trapper";
 
 let client;
