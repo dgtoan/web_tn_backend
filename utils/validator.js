@@ -71,7 +71,7 @@ const validateUtils =
     isEmailExists: async (email) => {
 
         const { db, client } = await connectDb();
-        const usersCollection = db.collection(constants.USERS);
+        const usersCollection = db.collection(constants.USERS_COLLECTION_NAME);
 
         const user = await usersCollection.findOne(
             { email: email }

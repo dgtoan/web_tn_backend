@@ -2,11 +2,9 @@ const jwtService = require("../jwt/jwt.service");
 const { connectDb } = require('../config/mongo.config');
 const validateUtils = require('../utils/validator');
 const constants = require('../utils/constants');
-const { v4: uuidv4 } = require("uuid");
 
 
-
-const authController = {
+const adminAuthController = {
     login: async (req, res) => {
         const loginData = req.body;
 
@@ -24,45 +22,6 @@ const authController = {
 
         // Get access token and refresh token
         const payload = { _id: user._id };
-
-        const access_token = jwtService.getAccessToken(payload);
-        const refresh_token = await jwtService.getRefreshToken(payload);
-
-        res.send({ access_token, refresh_token });
-    },
-
-    register: async (req, res) => {
-
-        const { db, client } = await connectDb();
-        const usersCollection = db.collection(constants.USERS_COLLECTION_NAME);
-        const profilesCollection = db.collection(constants.PROFILES_COLLECTION_NAME);
-
-        const registryData = req.body;
-
-        const _id = uuidv4();
-
-        try {
-            await validateRegisterData(registryData);
-
-            // Add user account
-            await usersCollection.insertOne(
-                {
-                    _id: _id,
-                    email: registryData.email,
-                    password: registryData.password,
-                    full_name: registryData.full_name
-                }
-            );
-        } catch (err) {
-            return res.status(400).send(
-                {
-                    message: err.message
-                }
-            );
-        }
-
-        // Get access token and refresh token
-        const payload = { _id: _id };
 
         const access_token = jwtService.getAccessToken(payload);
         const refresh_token = await jwtService.getRefreshToken(payload);
@@ -119,7 +78,7 @@ const validateLoginData = async (data) => {
     }
 
     const { db, client } = await connectDb();
-    const usersCollection = db.collection(constants.USERS_COLLECTION_NAME);
+    const usersCollection = db.collection(constants.ADMIN_COLLECTION_NAME);
 
     const user = await usersCollection.findOne(
         { email: data.email }
@@ -136,30 +95,4 @@ const validateLoginData = async (data) => {
     return user;
 }
 
-const validateRegisterData = async (data) => {
-    // Pre-validate data
-    if (!data) {
-        throw new Error("Please enter valid data!");
-    }
-
-    const validators = {
-        email: validateUtils.validateEmail,
-        password: validateUtils.validatePassword,
-        full_name: validateUtils.validateFullName
-    };
-
-    for (let key in data) {
-        if (validators[key]) {
-            if (!data[key] || !validators[key](data[key])) {
-                throw new Error(`Please enter valid ${key}!`);
-            }
-        }
-    }
-
-    if (await validateUtils.isEmailExists(data.email)) {
-        throw new Error("Email already exists!");
-    }
-}
-
-
-module.exports = authController;
+module.exports = adminAuthController;

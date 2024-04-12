@@ -1,10 +1,7 @@
 const constants = Object.freeze({
-    PROFILES: 'profiles',
-    USERS: 'users',
-    ROOMS_INFO : 'roomsInfo',
-    EMAIL: 'email',
-    PASSWORD: 'password',
-
+    PROFILES_COLLECTION_NAME: 'profiles',
+    USERS_COLLECTION_NAME: 'users',
+    ADMIN_COLLECTION_NAME: 'admin',
     NAME_REGEX: /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸưăạảấầẩẫậắằẳẵặẹẻẽềềểếệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]+$/i
 });
 
