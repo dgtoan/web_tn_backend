@@ -2,7 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 
 // TODO: paste a mongo URL here
 const URL = "mongodb+srv://alexcao194:oAWLfcIvFHZYfxfK@cluster0.6ra50nr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const DB_NAME = "tnptit";
+const DB_NAME = "webtracnghiem";
 
 let client;
 
