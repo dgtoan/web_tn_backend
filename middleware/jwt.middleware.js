@@ -8,7 +8,9 @@ const jwtMiddleware =
 
         // Check null or undefined
         if (!token) {
-            return res.status(401).send("Token is invalid");
+            return res.status(401).send({
+                message: "Token is invalid",
+            });
         }
 
         let user;
@@ -16,7 +18,11 @@ const jwtMiddleware =
         try {
             user = jwtService.verifyJWTToken(token);
         } catch (error) {
-            return res.status(401).send(error.message);
+            return res.status(401).send(
+                {
+                    message: error.message,
+                }
+            );
         }
 
         req.user = user;

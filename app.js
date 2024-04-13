@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/auth", router.authRouter);
 app.use("/admin/auth", router.adminAuthRouter);
+app.use("/admin/exams", router.adminExamRouter);
+app.use("/exams", router.examRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
