@@ -7,6 +7,10 @@ const { router } = require("./routes/index");
 const cors = require("cors");
 const { connectDb } = require("./config/mongo.config");
 const app = express();
+const option = require('./config/swagger.config');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const specs = swaggerJsdoc(option());
 
 // Kết nối tới CSDL ngay khi server khởi động
 connectDb().then(() => {
@@ -26,9 +30,10 @@ app.use("/auth", router.authRouter);
 app.use("/admin/auth", router.adminAuthRouter);
 app.use("/admin/exams", router.adminExamRouter);
 app.use("/exams", router.examRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
