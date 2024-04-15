@@ -8,6 +8,7 @@ const options = {
       },
       servers:[
         {url:'http://localhost:8080'},
+        {url:'https://web-tn-backend.onrender.com'},
       ],
       components: {
         securitySchemes: {

@@ -181,4 +181,81 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  */
 examRoute.get("/:id", jwtMiddleware.validateToken, examController.getExam);
 
+/**
+ * @swagger
+ * /exams/{id}/submit:
+ *   post:
+ *     summary: Submit answers for an exam and receive detailed results
+ *     tags: [Exam]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the exam to submit
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               answers:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 description: Array of indices representing the user's answers
+  *     responses:
+ *       200:
+ *         description: Returns detailed results of the exam submission
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   userId:
+ *                     type: string
+ *                     description: "The ID of the user who submitted the exam"
+ *                   examId:
+ *                     type: string
+ *                     description: "The ID of the exam"
+ *                   submittedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: "The timestamp when the exam was submitted"
+ *                   correctCount:
+ *                     type: integer
+ *                     description: "The count of correctly answered questions"
+ *                   totalQuestions:
+ *                     type: integer
+ *                     description: "The total number of questions in the exam"
+ *                   details:
+ *                     type: array
+ *                     description: "Detailed results for each question"
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         question:
+ *                           type: string
+ *                           description: "The content of the question"
+ *                         yourAnswer:
+ *                           type: integer
+ *                           description: "The answer submitted by the user"
+ *                         correctAnswer:
+ *                           type: integer
+ *                           description: "The correct answer to the question"
+ *                         isCorrect:
+ *                           type: boolean
+ *                           description: "Indicates whether the submitted answer was correct"
+ *       404:
+ *         description: Not found
+ *         content:
+ *          application/json:
+ *            example:
+ *             message: "Exam not found"
+ */
+examRoute.post("/:id/submit", jwtMiddleware.validateToken, examController.submitExam);
+
+
 module.exports = examRoute;

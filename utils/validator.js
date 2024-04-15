@@ -2,8 +2,9 @@ const { connectDb } = require('../config/mongo.config');
 const validator = require('validator');
 const constants = require('../utils/constants');
 const moment = require('moment');
+const ObjectId = require('mongodb').ObjectId;
 
-const validateUtils = 
+const validateUtils =
 {
     validateEmail: (email) => {
         if (!email) {
@@ -29,7 +30,7 @@ const validateUtils =
 
         name = name.trim();
 
-        if(!name.match(constants.NAME_REGEX)) {
+        if (!name.match(constants.NAME_REGEX)) {
             return false;
         }
 
@@ -64,8 +65,36 @@ const validateUtils =
 
         return validator.isURL(url, {
             // Allow URLs without top-level domain (e.g. localhost)
-            require_tld: false 
+            require_tld: false
         });
+    },
+
+    isAdmin: async (req, res, next) => {
+        const userId = req.user._id;
+
+        const { db, client } = await connectDb();
+        const usersCollection = db.collection(constants.ADMIN_COLLECTION_NAME);
+
+        try {
+            const user = await usersCollection.findOne(
+                { _id: new ObjectId(userId) }
+            );
+        } catch (err) {
+            return res.status(403).send(
+                {
+                    message: "Access is forbidden. This is only for admin"
+                }
+            );
+        }
+
+        if (!user) {
+            return res.status(403).send(
+                {
+                    message: "Access is forbidden. This is only for admin"
+                }
+            );
+        }
+        next();
     },
 
     isEmailExists: async (email) => {

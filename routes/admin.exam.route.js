@@ -1,6 +1,7 @@
 const express = require("express");
 const adminExamRoute = express();
 const adminExamController = require("../controllers/admin.exam.controller");
+const validateUtils = require('../utils/validator');
 const jwtMiddleware = require("../middleware/jwt.middleware");
 
 /**
@@ -160,7 +161,7 @@ const jwtMiddleware = require("../middleware/jwt.middleware");
  *            example:
  *             message: "Exam name is required"
  */
-adminExamRoute.post("/", jwtMiddleware.validateToken, adminExamController.createExam);
+adminExamRoute.post("/", jwtMiddleware.validateToken, validateUtils.isAdmin, adminExamController.createExam);
 
 /**
  * @swagger
@@ -320,7 +321,7 @@ adminExamRoute.post("/", jwtMiddleware.validateToken, adminExamController.create
  *            example:
  *             message: "Exam not found"
  */
-adminExamRoute.put("/:id", jwtMiddleware.validateToken, adminExamController.updateExam);
+adminExamRoute.put("/:id", jwtMiddleware.validateToken, validateUtils.isAdmin, adminExamController.updateExam);
 
 /**
  * @swagger
@@ -347,6 +348,6 @@ adminExamRoute.put("/:id", jwtMiddleware.validateToken, adminExamController.upda
  *            example:
  *              message: "Exam not found"
  */
-adminExamRoute.delete("/:id", jwtMiddleware.validateToken, adminExamController.deleteExam);
+adminExamRoute.delete("/:id", jwtMiddleware.validateToken, validateUtils.isAdmin, adminExamController.deleteExam);
 
 module.exports = adminExamRoute;
