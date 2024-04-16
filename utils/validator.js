@@ -79,6 +79,14 @@ const validateUtils =
             const user = await usersCollection.findOne(
                 { _id: new ObjectId(userId) }
             );
+            if (!user) {
+                return res.status(403).send(
+                    {
+                        message: "Access is forbidden. This is only for admin"
+                    }
+                );
+            }
+            next();
         } catch (err) {
             return res.status(403).send(
                 {
@@ -86,15 +94,6 @@ const validateUtils =
                 }
             );
         }
-
-        if (!user) {
-            return res.status(403).send(
-                {
-                    message: "Access is forbidden. This is only for admin"
-                }
-            );
-        }
-        next();
     },
 
     isEmailExists: async (email) => {

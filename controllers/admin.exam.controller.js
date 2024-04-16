@@ -6,7 +6,7 @@ const ObjectId = require("mongodb").ObjectId;
 const adminExamController = {
     createExam: async (req, res) => {
         try {
-            const exam = req.body;
+            let exam = req.body;
             if (!exam.name) {
                 return res.status(400).send({ message: 'Exam name is required' });
             } 
@@ -15,6 +15,9 @@ const adminExamController = {
             }
             if (!exam.questions || exam.questions.length === 0) {
                 return res.status(400).send({ message: 'Exam should have at least one question' });
+            }
+            if (!exam.hasOwnProperty('start')) {
+                exam.start = null;
             }
             const {db, client} = await connectDb();
             const examCollection = db.collection(constants.EXAMS_COLLECTION_NAME);
@@ -32,7 +35,7 @@ const adminExamController = {
     updateExam: async (req, res) => {
         try {
             const examId = req.params.id;
-            const exam = req.body;
+            let exam = req.body;
             if (!exam.name) {
                 return res.status(400).send({ message: 'Exam name is required' });
             } 
@@ -41,6 +44,10 @@ const adminExamController = {
             }
             if (!exam.questions || exam.questions.length === 0) {
                 return res.status(400).send({ message: 'Exam should have at least one question' });
+            }
+
+            if (!exam.hasOwnProperty('start')) {
+                exam.start = null;
             }
 
             const {db, client} = await connectDb();

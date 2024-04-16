@@ -8,7 +8,22 @@ const examController = {
         try {
             const {db, client} = await connectDb();
             const examCollection = db.collection(constants.EXAMS_COLLECTION_NAME);
-            const exams = await examCollection.find({}).toArray();
+    
+            const { name, type } = req.query;
+    
+            let query = {};
+            if (name) {
+                query.name = { $regex: new RegExp(name, 'i') };
+            }
+            if (type) {
+                if (type === 'Free access') {
+                    query.start = null;
+                } else if (type === 'Specific time') {
+                    query.start = { $ne: null };
+                }
+            }
+    
+            const exams = await examCollection.find(query).toArray();
             const mappedExams = exams.map(exam => {
                 return {
                     id: exam._id,
@@ -33,6 +48,9 @@ const examController = {
             if (!exam) {
                 return res.status(404).json({ message: 'Exam not found' });
             }
+            exam.questions.forEach(question => {
+                delete question.correctAnswer;
+            });
             res.send(
                 {
                     id: exam._id,

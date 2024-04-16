@@ -7,8 +7,22 @@ const jwtMiddleware = require("../middleware/jwt.middleware");
  * @swagger
  * /exams:
  *   get:
- *     summary: Get a list of all exam
+ *     summary: Get a list of all exams, with optional filtering by name or type
  *     tags: [Exam]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Exam name to filter by
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [Free access, Specific time]
+ *         required: false
+ *         description: Type of exam to filter by
  *     responses:
  *       200:
  *         description: Successful response
@@ -78,8 +92,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Paris",
  *                           "Rome",
  *                           "Madrid"
- *                       ],
- *                       "correctAnswer": 1
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Ai là nhà văn nổi tiếng của tác phẩm 'Tôi thấy hoa vàng trên cỏ xanh'?",
@@ -88,8 +101,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Ngô Tất Tố",
  *                           "Nguyễn Du",
  *                           "Trích Thanh"
- *                       ],
- *                       "correctAnswer": 1
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Quốc gia nào là đất nước có diện tích lớn nhất thế giới?",
@@ -98,8 +110,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Mỹ",
  *                           "Trung Quốc",
  *                           "Ấn Độ"
- *                       ],
- *                       "correctAnswer": 0
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Bộ phận nào của cơ thể chịu trách nhiệm giữ thăng bằng?",
@@ -108,8 +119,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Tai",
  *                           "Tay",
  *                           "Chân"
- *                       ],
- *                       "correctAnswer": 3
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Nhân vật nào nổi tiếng trong truyện 'Harry Potter' của J.K. Rowling?",
@@ -118,8 +128,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Hermione Granger",
  *                           "Katniss Everdeen",
  *                           "Luke Skywalker"
- *                       ],
- *                       "correctAnswer": 1
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Thành phố nào được gọi là 'Thủ đô của thế giới'?",
@@ -128,8 +137,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Paris",
  *                           "London",
  *                           "Tokyo"
- *                       ],
- *                       "correctAnswer": 2
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Ai là người sáng lập Microsoft?",
@@ -138,8 +146,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Steve Jobs",
  *                           "Mark Zuckerberg",
  *                           "Elon Musk"
- *                       ],
- *                       "correctAnswer": 0
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Quốc gia nào nằm ở bán đảo Ấn Độ?",
@@ -148,8 +155,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Việt Nam",
  *                           "Ấn Độ",
  *                           "Malaysia"
- *                       ],
- *                       "correctAnswer": 2
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Thung lũng nổi tiếng với ngành công nghiệp công nghệ ở Mỹ là gì?",
@@ -158,8 +164,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Green Valley",
  *                           "Tech Valley",
  *                           "Innovation Valley"
- *                       ],
- *                       "correctAnswer": 0
+ *                       ]
  *                   },
  *                   {
  *                       "content": "Ai là nhà khoa học nổi tiếng với lý thuyết tương đối?",
@@ -168,8 +173,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *                           "Galileo Galilei",
  *                           "Albert Einstein",
  *                           "Stephen Hawking"
- *                       ],
- *                       "correctAnswer": 2
+ *                       ]
  *                   }
  *               ]
  *       404:
