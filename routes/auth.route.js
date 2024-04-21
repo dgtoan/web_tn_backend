@@ -59,12 +59,12 @@ authRouter.post("/login", authController.login);
  *                 type: string
  *               password:
  *                 type: string
- *               fullName:
+ *               full_name:
  *                 type: string
  *             example:
  *                email: "a@yopmail.com"
  *                password: "Abcd!234"
- *                fullName: "Dawn Nguyen"
+ *                full_name: "Dawn Nguyen"
  *     responses:
  *       200:
  *         description: Successful register
