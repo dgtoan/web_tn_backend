@@ -31,7 +31,6 @@ const adminAuthController = {
 
     refreshToken: async (req, res) => {
         const refreshToken = req.headers["refresh_token"];
-
         if (!refreshToken) {
             return res.status(403).send(
                 {
@@ -41,7 +40,7 @@ const adminAuthController = {
         }
 
         try {
-            const access_token = await jwtService.refreshToken(refreshToken, res);
+            const access_token = await jwtService.refreshToken(refreshToken, isAdmin=true, res);
             res.send(access_token);
         } catch (err) {
             const message = (err && err.message) || err;

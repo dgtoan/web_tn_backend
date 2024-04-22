@@ -41,8 +41,64 @@ const jwtMiddleware = require("../middleware/jwt.middleware");
  */
 adminAuthRouter.post("/login", adminAuthController.login);
 
+/**
+ * @swagger
+ * /admin/auth/refresh_token:
+ *   get:
+ *     summary: Refresh token
+ *     tags: [Admin Auth]
+ *     parameters:
+ *      - in: header
+ *        name: refresh_token
+ *        required: true
+ *        description: Refresh token
+ *        type: string
+ *        example: ""
+ *     responses:
+ *       200:
+ *         description: Successful refresh token
+ *         content:
+ *           application/json:
+ *             example:
+ *               access_token: ""
+ *               refresh_token: ""
+ *       403:
+ *         description: Bad Request
+ *         content:
+ *          application/json:
+ *            example:
+ *             message: "Access is forbidden"
+ */
 adminAuthRouter.get("/refresh_token", adminAuthController.refreshToken);
 
+/**
+ * @swagger
+ * /admin/auth/validate:
+ *   get:
+ *     summary: Validate token
+ *     tags: [Admin Auth]
+ *     parameters:
+ *      - in: header
+ *        name: access_token
+ *        required: true
+ *        description: Access token
+ *        schema:
+ *         type: string
+ *        example: ""
+ *     responses:
+ *       200:
+ *         description: Successful validate token
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: ""
+ *       401:
+ *         description: Bad Request
+ *         content:
+ *          application/json:
+ *            example:
+ *             message: "Token is invalid"
+ */
 adminAuthRouter.get("/validate", jwtMiddleware.validateToken, adminAuthController.validate);
 
 module.exports = adminAuthRouter;

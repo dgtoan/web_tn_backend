@@ -2,7 +2,6 @@ const jwtService = require("../jwt/jwt.service");
 const { connectDb } = require('../config/mongo.config');
 const validateUtils = require('../utils/validator');
 const constants = require('../utils/constants');
-const { v4: uuidv4 } = require("uuid");
 
 
 
@@ -39,20 +38,25 @@ const authController = {
 
         const registryData = req.body;
 
-        const _id = uuidv4();
-
         try {
             await validateRegisterData(registryData);
 
             // Add user account
-            await usersCollection.insertOne(
+            const result = await usersCollection.insertOne(
                 {
-                    _id: _id,
                     email: registryData.email,
                     password: registryData.password,
-                    full_name: registryData.full_name
+                    fullName: registryData.fullName
                 }
             );
+
+            // Get access token and refresh token
+            const payload = { _id: result.insertedId };
+
+            const access_token = jwtService.getAccessToken(payload);
+            const refresh_token = await jwtService.getRefreshToken(payload);
+    
+            res.send({ access_token, refresh_token });
         } catch (err) {
             return res.status(400).send(
                 {
@@ -61,13 +65,6 @@ const authController = {
             );
         }
 
-        // Get access token and refresh token
-        const payload = { _id: _id };
-
-        const access_token = jwtService.getAccessToken(payload);
-        const refresh_token = await jwtService.getRefreshToken(payload);
-
-        res.send({ access_token, refresh_token });
     },
 
     refreshToken: async (req, res) => {
@@ -82,10 +79,11 @@ const authController = {
         }
 
         try {
-            const access_token = await jwtService.refreshToken(refreshToken, res);
+            const access_token = await jwtService.refreshToken(refreshToken, isAdmin=false, res);
             res.send(access_token);
         } catch (err) {
             const message = (err && err.message) || err;
+            console.log(err);
             res.status(403).send(
                 {
                     message: message
@@ -145,7 +143,7 @@ const validateRegisterData = async (data) => {
     const validators = {
         email: validateUtils.validateEmail,
         password: validateUtils.validatePassword,
-        full_name: validateUtils.validateFullName
+        fullName: validateUtils.validateFullName
     };
 
     for (let key in data) {

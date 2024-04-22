@@ -1,18 +1,15 @@
 const MongoClient = require("mongodb").MongoClient;
-
-// TODO: paste a mongo URL here
-const URL = "mongodb+srv://alexcao194:oAWLfcIvFHZYfxfK@cluster0.6ra50nr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const DB_NAME = "tnptit";
+const constants = require('../utils/constants');
 
 let client;
 
 async function connectDb() {
     if (!client) {
-        client = await MongoClient.connect(URL);
+        client = await MongoClient.connect(constants.DATABASE_URL);
     }
 
     return {
-        db: client.db(DB_NAME),
+        db: client.db(constants.DATABASE_NAME),
         client: client
     };
 }

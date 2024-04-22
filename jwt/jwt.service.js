@@ -1,20 +1,19 @@
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
 const { connectDb } = require("../config/mongo.config");
+const constants = require('../utils/constants');
+const { ObjectId } = require("mongodb");
 
-const jwtSecretString = "mysecret"; // TODO: move to .env
-const REFRESH_TOKENS = "refreshTokens";
 const START_HEADER_AUTH = "Bearer ";
 
 const jwtService =
 {
     getAccessToken: payload => {
-        return jwt.sign({ user: payload }, jwtSecretString, { expiresIn: "150min" });
+        return jwt.sign({ user: payload }, constants.SECRET_KEY, { expiresIn: "150min" });
     },
 
     getRefreshToken: async (payload) => {
         const { db, client } = await connectDb();
-        const collection = db.collection(REFRESH_TOKENS);
+        const collection = db.collection(constants.REFRESH_TOKENS_COLLECTION_NAME);
 
         const userRefreshTokens = await collection
             .find({ userId: payload._id })
@@ -26,7 +25,7 @@ const jwtService =
             await collection.drop({ userId: payload._id });
         }
 
-        const refreshToken = jwt.sign({ user: payload }, jwtSecretString, {
+        const refreshToken = jwt.sign({ user: payload }, constants.SECRET_KEY, {
             expiresIn: "30d"
         });
 
@@ -47,21 +46,28 @@ const jwtService =
             token = token.slice(7, token.length);
         }
 
-        const decodedToken = jwt.verify(token, jwtSecretString)
+        const decodedToken = jwt.verify(token, constants.SECRET_KEY)
         return decodedToken.user;
     },
 
-    refreshToken: async token => {
+    refreshToken: async (token, isAdmin) => {
         const { db, client } = await connectDb();
 
-        const usersCollection = db.collection(constants.USERS);
-        const collection = db.collection(REFRESH_TOKENS);
+        var usersCollection = db.collection(constants.USERS_COLLECTION_NAME);
+        if (isAdmin) {
+            usersCollection = db.collection(constants.ADMIN_COLLECTION_NAME);
+            console.log("Admin");
+        }
+        
+        const collection = db.collection(constants.REFRESH_TOKENS_COLLECTION_NAME);
 
-        const userData = this.verifyJWTToken(token);
+        const userData = jwtService.verifyJWTToken(token);
+        console.log(userData);
+        console.log(new ObjectId(userData._id));
 
-        const user = await usersCollection.findOne({ userId: userData._id });
+        const user = await usersCollection.findOne({ _id: new ObjectId(userData._id) });
+        console.log(user);
         // var userDocument = user.hasNext() ? user.next() : null
-
         if (!user) {
             throw new Error(`Access is forbidden`);
         }
@@ -94,9 +100,9 @@ const jwtService =
 
 const getUpdatedRefreshToken = async (oldRefreshToken, payload) => {
     const { db, client } = await connectDb();
-    const collection = db.collection(REFRESH_TOKENS);
+    const collection = db.collection(constants.REFRESH_TOKENS_COLLECTION_NAME);
     // create new refresh token
-    const newRefreshToken = jwt.sign({ user: payload }, jwtSecretString, {
+    const newRefreshToken = jwt.sign({ user: payload }, constants.SECRET_KEY, {
         expiresIn: "30d"
     });
 
@@ -113,7 +119,7 @@ const getUpdatedRefreshToken = async (oldRefreshToken, payload) => {
 };
 
 const getAccessToken = payload => {
-    return jwt.sign({ user: payload }, jwtSecretString, { expiresIn: "15min" });
+    return jwt.sign({ user: payload }, constants.SECRET_KEY, { expiresIn: "15min" });
 };
 
 module.exports = jwtService;

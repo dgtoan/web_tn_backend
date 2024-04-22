@@ -59,12 +59,12 @@ authRouter.post("/login", authController.login);
  *                 type: string
  *               password:
  *                 type: string
- *               full_name:
+ *               fullName:
  *                 type: string
  *             example:
  *                email: "a@yopmail.com"
  *                password: "Abcd!234"
- *                full_name: "Dawn Nguyen"
+ *                fullName: "Dawn Nguyen"
  *     responses:
  *       200:
  *         description: Successful register
@@ -82,8 +82,64 @@ authRouter.post("/login", authController.login);
  */
 authRouter.post("/register", authController.register);
 
+/**
+ * @swagger
+ * /auth/refresh_token:
+ *   get:
+ *     summary: Refresh token
+ *     tags: [User Auth]
+ *     parameters:
+ *      - in: header
+ *        name: refresh_token
+ *        required: true
+ *        description: Refresh token
+ *        type: string
+ *        example: ""
+ *     responses:
+ *       200:
+ *         description: Successful refresh token
+ *         content:
+ *           application/json:
+ *             example:
+ *               access_token: ""
+ *               refresh_token: ""
+ *       403:
+ *         description: Bad Request
+ *         content:
+ *          application/json:
+ *            example:
+ *             message: "Access is forbidden"
+ */
 authRouter.get("/refresh_token", authController.refreshToken);
 
+/**
+ * @swagger
+ * /auth/validate:
+ *   get:
+ *     summary: Validate token
+ *     tags: [User Auth]
+ *     parameters:
+ *      - in: header
+ *        name: access_token
+ *        required: true
+ *        description: Access token
+ *        schema:
+ *         type: string
+ *        example: ""
+ *     responses:
+ *       200:
+ *         description: Successful validate token
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: ""
+ *       401:
+ *         description: Bad Request
+ *         content:
+ *          application/json:
+ *            example:
+ *             message: "Token is invalid"
+ */
 authRouter.get("/validate", jwtMiddleware.validateToken, authController.validate);
 
 module.exports = authRouter;

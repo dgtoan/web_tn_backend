@@ -177,7 +177,7 @@ async function listExamResultsByExamId(req, res) {
             delete result.details;
             return {
                 id: resultId,
-                full_name: user.full_name,
+                fullName: user.fullName,
                 result: result
             };
         });
