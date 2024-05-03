@@ -19,6 +19,11 @@ connectDb().then(() => {
   console.error("Failed to connect to MongoDB", err);
 });
 
+// check server is running
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());
@@ -37,8 +42,5 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
 
 module.exports = app;
