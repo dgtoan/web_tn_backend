@@ -366,5 +366,79 @@ examRoute.post("/:id/submit", jwtMiddleware.validateToken, examController.submit
  */
 examRoute.get("/results", jwtMiddleware.validateToken, examController.listExamResults);
 
+/**
+ * @swagger
+ * /exams/result/{id}:
+ *   get:
+ *     summary: Get an exam result by ID
+ *     tags: [Exam]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the exam result
+ *         schema:
+ *           type: string
+ *         example:
+ *             6634feb85518bb50f849670e
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id: 
+ *                   type: string
+ *                 exam: 
+ *                   type: object
+ *                   properties: 
+ *                     _id: 
+ *                       type: string
+ *                     name: 
+ *                       type: string
+ *                     start: 
+ *                       type: integer
+ *                       format: int64
+ *                     duration: 
+ *                       type: integer
+ *                       format: int32
+ *                 result: 
+ *                   type: object
+ *                   properties: 
+ *                     submittedAt: 
+ *                       type: string
+ *                       format: date-time
+ *                     correctCount: 
+ *                       type: integer
+ *                       format: int32
+ *                     totalQuestions: 
+ *                       type: integer
+ *                       format: int32
+ *                     details: 
+ *                       type: array
+ *                       items: 
+ *                         type: object
+ *                         properties: 
+ *                           question: 
+ *                             type: string
+ *                           yourAnswer: 
+ *                             type: integer
+ *                             format: int32
+ *                           correctAnswer: 
+ *                             type: integer
+ *                             format: int32
+ *                           isCorrect: 
+ *                             type: boolean
+ *       404:
+ *         description: Not found
+ *         content:
+ *          application/json:
+ *            example:
+ *             message:
+ *               type: string
+ */
+examRoute.get("/result/:id", jwtMiddleware.validateToken, examController.getExamResult);
 
 module.exports = examRoute;

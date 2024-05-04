@@ -163,6 +163,36 @@ const examController = {
             res.status(500).json({ message: error.message });
         }
     },
+
+    getExamResult: async (req, res) => {
+        try {
+            const userId = req.user._id;
+            const examResultId = req.params.id;
+
+            const {db, client} = await connectDb();
+            const examResultsCollection = db.collection(constants.EXAM_RESULTS_COLLECTION_NAME);
+            const examsCollection = db.collection(constants.EXAMS_COLLECTION_NAME);
+
+            const result = await examResultsCollection.find({ _id: new ObjectId(examResultId) }).sort({ submittedAt: -1 }).limit(1).next();
+            if (!result) {
+                return res.status(404).json({ message: 'Exam result not found' });
+            }
+
+            const exam = await examsCollection.findOne({ _id: result.examId });
+            delete exam.questions;
+            delete result.userId;
+            delete result.examId;
+            const resultId = result._id;
+            delete result._id;
+            return res.status(200).send({
+                id: resultId,
+                exam: exam,
+                result: result
+            });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
 };
 
 module.exports = examController;
