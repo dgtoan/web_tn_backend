@@ -105,7 +105,6 @@ const examController = {
     
             await resultsCollection.insertOne(result);
     
-            delete result._id
             res.status(200).send(result);
         } catch (error) {
             res.status(500).json({ message: error.message });
