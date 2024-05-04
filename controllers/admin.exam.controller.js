@@ -127,7 +127,6 @@ async function listExamResultsByUserId(req, res) {
         const exams = await examsCollection.find(examQuery).toArray();
         let examResults = results.map(result => {
             let exam = exams.find(exam => exam._id.equals(result.examId));
-            delete exam._id;
             delete exam.questions;
             delete result.userId;
             delete result.examId;
