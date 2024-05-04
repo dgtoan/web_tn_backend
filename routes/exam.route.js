@@ -61,7 +61,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
 
 /**
  * @swagger
- * /exams/{id}:
+ * /exams/detail/{id}:
  *   get:
  *     summary: Get an exam by ID
  *     tags: [Exam]
@@ -183,7 +183,7 @@ examRoute.get("/", jwtMiddleware.validateToken, examController.listExams);
  *            example:
  *             message: "Exam not found"
  */
-examRoute.get("/:id", jwtMiddleware.validateToken, examController.getExam);
+examRoute.get("/detail/:id", jwtMiddleware.validateToken, examController.getExam);
 
 /**
  * @swagger
@@ -260,6 +260,111 @@ examRoute.get("/:id", jwtMiddleware.validateToken, examController.getExam);
  *             message: "Exam not found"
  */
 examRoute.post("/:id/submit", jwtMiddleware.validateToken, examController.submitExam);
+
+
+/**
+ * @swagger
+ * /exams/results:
+ *   get:
+ *     summary: List exam results by user ID
+ *     tags: [Exam]
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         required: false
+ *         description: Filter by exam name (case insensitive, partial matches allowed)
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         required: false
+ *         description: Filter by exam access type (e.g., 'Free access', 'Specific time')
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - Free access
+ *             - Specific time
+ *       - name: submittedAtFrom
+ *         in: query
+ *         required: false
+ *         description: Lower boundary for submission date filter (inclusive)
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *       - name: submittedAtTo
+ *         in: query
+ *         required: false
+ *         description: Upper boundary for submission date filter (exclusive)
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *     responses:
+ *       200:
+ *         description: A list of exam results for the specified user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The ID of the exam result
+ *                   exam:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                       start:
+ *                         type: string
+ *                         format: date-time
+ *                         nullable: true
+ *                       duration:
+ *                         type: integer
+ *                         description: Duration of the exam in minutes
+ *                   result:
+ *                     type: object
+ *                     properties:
+ *                       submittedAt:
+ *                         type: string
+ *                         format: date-time
+ *                       correctCount:
+ *                         type: integer
+ *                       totalQuestions:
+ *                         type: integer
+ *                       details:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             question:
+ *                               type: string
+ *                             yourAnswer:
+ *                               type: integer
+ *                             correctAnswer:
+ *                               type: integer
+ *                             isCorrect:
+ *                               type: boolean
+ *             examples:
+ *               application/json:
+ *                 - id: "661d4c265acfe5d69cc23860"
+ *                   exam:
+ *                     name: "Practice for Midterm Exam"
+ *                     start: null
+ *                     duration: 60
+ *                   result:
+ *                     submittedAt: "2024-04-15T15:47:50.353Z"
+ *                     correctCount: 10
+ *                     totalQuestions: 10
+ *       403:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Access is forbidden."
+ */
+examRoute.get("/results", jwtMiddleware.validateToken, examController.listExamResults);
 
 
 module.exports = examRoute;
