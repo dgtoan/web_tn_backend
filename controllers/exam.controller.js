@@ -127,7 +127,7 @@ const examController = {
                     $lt: new Date(submittedAtTo)
                 };
             }
-            const results = await examResultsCollection.find(filter).toArray();
+            const results = await examResultsCollection.find(filter).sort({ submittedAt: -1 }).toArray();
             const examIds = results.map(result => result.examId);
             let examQuery = {_id: { $in: examIds } };
             if (name) {
