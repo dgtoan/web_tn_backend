@@ -93,11 +93,14 @@ const examController = {
                     isCorrect: isCorrect
                 };
             });
+
+            let date = new Date();
+            date.setHours(date.getHours() + 7);
     
             const result = {
                 userId: userId,
                 examId: exam._id,
-                submittedAt: new Date(),
+                submittedAt: date,
                 correctCount: correctCount,
                 totalQuestions: exam.questions.length,
                 details: detailedResults
