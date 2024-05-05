@@ -368,7 +368,7 @@ examRoute.get("/results", jwtMiddleware.validateToken, examController.listExamRe
 
 /**
  * @swagger
- * /exams/result/{id}:
+ * /exams/results/{id}:
  *   get:
  *     summary: Get an exam result by ID
  *     tags: [Exam]
@@ -439,6 +439,5 @@ examRoute.get("/results", jwtMiddleware.validateToken, examController.listExamRe
  *             message:
  *               type: string
  */
-examRoute.get("/result/:id", jwtMiddleware.validateToken, examController.getExamResult);
-
+examRoute.get("/results/:id", jwtMiddleware.validateToken, examController.getExamResult);
 module.exports = examRoute;
