@@ -178,7 +178,6 @@ const examController = {
             }
 
             const exam = await examsCollection.findOne({ _id: result.examId });
-            delete exam.questions;
             delete result.userId;
             delete result.examId;
             const resultId = result._id;
