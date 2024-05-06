@@ -2,7 +2,7 @@ const jwtService = require("../jwt/jwt.service");
 const { connectDb } = require('../config/mongo.config');
 const validateUtils = require('../utils/validator');
 const constants = require('../utils/constants');
-
+const ObjectId = require("mongodb").ObjectId;
 
 const adminAuthController = {
     login: async (req, res) => {
@@ -53,6 +53,22 @@ const adminAuthController = {
     },
 
     validate: async (req, res) => {
+        const { db, client } = await connectDb();
+        const usersCollection = db.collection(constants.ADMIN_COLLECTION_NAME);
+
+        const user = await usersCollection.findOne(
+            { _id: new ObjectId(req.user._id) }
+        );
+
+        if (!user) {
+            return res.status(403).send(
+                {
+                    message: "Access is forbidden"
+                }
+            );
+        }
+
+        delete user.password;
         res.send(req.user);
     }
 };
